@@ -1,0 +1,3 @@
+[submodule "webdav-handler-rs"]
+	path = webdav-handler-rs
+	url = git@github.com:sj6219/webdav-handler-rs.git

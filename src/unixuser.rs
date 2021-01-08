@@ -98,8 +98,8 @@ impl User {
             let ret = unsafe {
                 libc::getgrouplist(
                     cname.as_ptr(),
-                    user.gid as libc::gid_t,
-                    //user.gid as i32,
+                    //user.gid as libc::gid_t,
+                    user.gid as i32,
                     buf.as_mut_ptr() as *mut _,
                     &mut ngroups as *mut _,
                 )

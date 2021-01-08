@@ -258,7 +258,7 @@ pub fn proc_switch_ugid(uid: u32, gid: u32, keep_privs: bool) {
         io::Error::last_os_error()
     }
 
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
     unsafe {
         // first get full root privs (real, effective, and saved uids)
         if libc::setuid(0) != 0 {
@@ -297,7 +297,7 @@ pub fn proc_switch_ugid(uid: u32, gid: u32, keep_privs: bool) {
             }
         }
     }
-    #[cfg(target_os = "windows")]
+    #[cfg(any(target_os = "windows", target_os = "macos"))]
     panic!()
 }
 

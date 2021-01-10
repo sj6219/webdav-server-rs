@@ -96,22 +96,23 @@ impl User {
         if with_groups {
             let mut ngroups = (buf.len() / std::mem::size_of::<libc::gid_t>()) as libc::c_int;
             let ret = unsafe {
-                cfg_if! {
-                    if #[cfg(any(target_os = "macos", target_os = "ios"))] {
-                        libc::getgrouplist(
-                            cname.as_ptr(),
-                            user.gid as ::c_int,
-                            buf.as_mut_ptr() as *mut _,
-                            &mut ngroups as *mut _,
-                        )
-                    } else {
-                        libc::getgrouplist(
-                            cname.as_ptr(),
-                            user.gid as libc::gid_t,
-                            buf.as_mut_ptr() as *mut _,
-                            &mut ngroups as *mut _,
-                        )
-                    }
+                #[cfg(any(target_os = "macos", target_os = "ios"))] 
+                {
+                    libc::getgrouplist(
+                        cname.as_ptr(),
+                        user.gid as libc::c_int,
+                        buf.as_mut_ptr() as *mut _,
+                        &mut ngroups as *mut _,
+                    )
+                }
+                #[cfg(not(any(target_os = "macos", target_os = "ios")))] 
+                {
+                    libc::getgrouplist(
+                        cname.as_ptr(),
+                        user.gid as libc::gid_t,
+                        buf.as_mut_ptr() as *mut _,
+                        &mut ngroups as *mut _,
+                    )
                 }
             };
             if ret >= 0 && ngroups > 0 {

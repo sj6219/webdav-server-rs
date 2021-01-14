@@ -3,13 +3,13 @@ use std::path::{Path, PathBuf};
 
 use webdav_handler::davpath::DavPath;
 use webdav_handler::fs::*;
-use webdav_handler::localfs::LocalFs;
+use webdav_handler::localfsex::LocalFsEx;
 
 use crate::suid::UgidSwitch;
 
 #[derive(Clone)]
 pub struct UserFs {
-    pub fs:  LocalFs,
+    pub fs:  LocalFsEx,
     basedir: PathBuf,
     uid:     u32,
 }
@@ -26,13 +26,13 @@ impl UserFs {
         // uid is used for quota() calls.
         let uid = target_creds.as_ref().map(|ugid| ugid.0).unwrap_or(0);
 
-        // set up the LocalFs hooks for uid switching.
+        // set up the LocalFsEx hooks for uid switching.
         let switch = UgidSwitch::new(target_creds.clone());
         let blocking_guard = Box::new(move || Box::new(switch.guard()) as Box<dyn Any>);
 
         Box::new(UserFs {
             basedir: dir.as_ref().to_path_buf(),
-            fs:      *LocalFs::new_with_fs_access_guard(
+            fs:      *LocalFsEx::new_with_fs_access_guard(
                 dir,
                 public,
                 case_insensitive,

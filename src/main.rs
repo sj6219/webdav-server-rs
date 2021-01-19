@@ -10,6 +10,7 @@
 //! See the [GitHub repository](https://github.com/miquels/webdav-server-rs/)
 //! for documentation on how to run the server.
 //!
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[macro_use]
 extern crate log;

@@ -142,7 +142,7 @@
 
   # case insensitive lookups: true, false, ms (default: false).
   # "ms" means "for Microsoft clients".
-  case-insensitive = "false"
+  case-insensitive = "ms"
 
 # Another location definition could follow.
 #[[location]]

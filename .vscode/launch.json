@@ -9,7 +9,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/target/debug/webdav-server.exe",
-            "args": [],
+            "args": ["-v", "-optionsfile=C:\\Users\\sjpark\\Documents\\flex.vnc"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

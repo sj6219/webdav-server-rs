@@ -383,28 +383,33 @@ impl Server {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // command line option processing.
-    let matches = clap_app!(webdav_server =>
-        (version: "0.3")
-        (@arg CFG: -c --config +takes_value "configuration file (/etc/webdav-server.toml)")
-        (@arg PORT: -p --port +takes_value "listen to this port on localhost only")
-        (@arg DBG: -D --debug "enable debug level logging")
-    )
-    .get_matches();
-
-    if matches.is_present("DBG") {
-        use env_logger::Env;
-        let level = "webdav_server=debug,webdav_handler=debug";
-        env_logger::Builder::from_env(Env::default().default_filter_or(level)).init();
-    } else {
-        env_logger::init();
+    #[cfg(any())]
+    {
+        let matches = clap_app!(webdav_server =>
+            (version: "0.3")
+            (@arg CFG: -c --config +takes_value "configuration file (/etc/webdav-server.toml)")
+            (@arg PORT: -p --port +takes_value "listen to this port on localhost only")
+            (@arg DBG: -D --debug "enable debug level logging")
+        )
+        .get_matches();
+    
+        if matches.is_present("DBG") {
+            use env_logger::Env;
+            let level = "webdav_server=debug,webdav_handler=debug";
+            env_logger::Builder::from_env(Env::default().default_filter_or(level)).init();
+        } else {
+            env_logger::init();
+        }
+    
+        let port = matches.value_of("PORT");
+        #[cfg(not(target_os = "windows"))]
+        //let cfg = matches.value_of("CFG").unwrap_or("/etc/webdav-server.toml");
+        let cfg = matches.value_of("CFG").unwrap_or("./webdav-server.toml");
+        #[cfg(target_os = "windows")]
+        let cfg = matches.value_of("CFG").unwrap_or(".\\webdav-windows.toml");
     }
-
-    let port = matches.value_of("PORT");
-    #[cfg(not(target_os = "windows"))]
-    //let cfg = matches.value_of("CFG").unwrap_or("/etc/webdav-server.toml");
-    let cfg = matches.value_of("CFG").unwrap_or("./webdav-server.toml");
-    #[cfg(target_os = "windows")]
-    let cfg = matches.value_of("CFG").unwrap_or(".\\webdav-windows.toml");
+    let port = None;
+    let cfg = ".\\webdav-windows.toml";
 
     // read config.
     let mut config = match config::read(cfg.clone()) {

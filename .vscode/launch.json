@@ -30,7 +30,7 @@
                     "kind": "bin"
                 }
             },
-            "args": [],
+            "args": ["-v", "-optionsfile=C:\\Users\\sjpark\\Documents\\flex.vnc"],
             "cwd": "${workspaceFolder}"
         },
         {

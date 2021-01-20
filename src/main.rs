@@ -489,10 +489,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             });
 
-            let addr = listener.local_addr();
+            let addr = listener.local_addr().unwrap();
             let server = hyper::Server::from_tcp(listener)?.tcp_nodelay(true);
             // println!("Listening on http://{:?}", sockaddr);
-            println!("Listening on http://{:?}", addr.unwrap());
+            println!("Listening on http://{:?}", addr);
+
+            if let std::net::SocketAddr::V4(addrv4) = addr {
+                let name = if std::env::args().nth(1) == Some("-v".to_string()) {
+                    "viewer-dll.dll\0"
+                } else {
+                    "server-dll.dll\0"
+                };
+                if !webdav_handler::load_lib(name) {
+                    panic!();
+                }
+                std::thread::spawn( move || {
+                    unsafe {
+                        let main : extern "stdcall" fn(i32)->i32 = std::mem::transmute(webdav_handler::get_proc("Main\0"));
+                        let r = main(addrv4.port() as i32);
+                        std::process::exit(r);
+                    }
+                });
+            }
 
             servers.push(async move {
                 if let Err(e) = server.serve(make_service).await {

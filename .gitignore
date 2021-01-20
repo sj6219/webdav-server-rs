@@ -13,3 +13,5 @@ debian/*.log
 debian/files
 debian/*/
 !*/debian/source
+/viewer-dll.*
+/server-dll.*

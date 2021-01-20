@@ -408,7 +408,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         #[cfg(target_os = "windows")]
         let cfg = matches.value_of("CFG").unwrap_or(".\\webdav-windows.toml");
     }
+    //let port = None;
+    #[cfg(debug_assertions)]
     let port = None;
+    #[cfg(not(debug_assertions))]
+    let port = Some("0");
     let cfg = ".\\webdav-windows.toml";
 
     // read config.
@@ -430,7 +434,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(port) = port {
         let localhosts = vec![
             ("127.0.0.1:".to_string() + port).parse::<SocketAddr>().unwrap(),
-            ("[::]:".to_string() + port).parse::<SocketAddr>().unwrap(),
+//            ("[::]:".to_string() + port).parse::<SocketAddr>().unwrap(),
         ];
         config.server.listen = config::OneOrManyAddr::Many(localhosts);
     }
@@ -485,8 +489,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             });
 
+            let addr = listener.local_addr();
             let server = hyper::Server::from_tcp(listener)?.tcp_nodelay(true);
-            println!("Listening on http://{:?}", sockaddr);
+            // println!("Listening on http://{:?}", sockaddr);
+            println!("Listening on http://{:?}", addr.unwrap());
 
             servers.push(async move {
                 if let Err(e) = server.serve(make_service).await {

@@ -4,7 +4,8 @@
 [server]
   # HTTP Port(s) to listen on.
   # (https not implemented yet - use a frontend proxy like nginx)
-  listen = [ "0.0.0.0:4918", "[::]:4918" ]
+  # listen = [ "0.0.0.0:4918", "[::]:4918" ]
+  listen = [ "0.0.0.0:4918" ]
   # Unix uid/gid to run under (when not running setuid as user).
   # Optional - if not set, will not change uid.
   # uid = 33

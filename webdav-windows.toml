@@ -136,7 +136,7 @@
   #indexfile = "index.html"
 
   # Serve HTML directory indexes: true, false (default: false).
-  autoindex = false
+  autoindex = true
 
   # webdav PROPFIND: hide symbolic links: true, false (default: true).
   hide-symlinks = true

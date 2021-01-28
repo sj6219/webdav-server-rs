@@ -98,7 +98,7 @@
   # webdav-ro: GET, HEAD, OPTIONS, PROPFIND
   # webdav-rw: GET, HEAD, OPTIONS, PROPFIND, PUT, PATCH, PROPPATCH,
   #            MKCOL, COPY, MOVE, DELETE, LOCK, UNLOCK
-  methods = [ "webdav-ro" ]
+  methods = [ "webdav-rw" ]
 
   # Authenticate? true, false, opportunistic, write (default: opportunistic).
   #

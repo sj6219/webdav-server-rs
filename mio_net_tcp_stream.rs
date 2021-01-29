@@ -176,7 +176,9 @@ fn tcp_read(inner : &net::TcpStream, buf: &mut [u8]) -> io::Result<usize> {
     let r = (&*inner).read(buf);
     #[cfg(debug_assertions)]
     if let Ok(n) = r {
-        println! ("({}|", std::str::from_utf8(&buf[..n]).unwrap())
+        print! ("[");
+        std::io::stdout().write_all(&buf[..n]);
+        println! ("|")
     } 
     r
 }
@@ -187,16 +189,51 @@ fn tcp_read_vectored(inner : &net::TcpStream, bufs: &mut [IoSliceMut<'_>]) -> io
     if let Ok(n) = r {
         let mut i = 0;
         let mut j = n;
+        print! ("[");
         while i < bufs.len() {
             if j > bufs[i].len() {
-                println! ("[{}|", std::str::from_utf8(&bufs[i][..]).unwrap());
+                std::io::stdout().write_all(&bufs[i][..]);
                 j -= bufs[i].len();
             } else {
-                println! ("[{}|", std::str::from_utf8(&bufs[i][..j]).unwrap());
+                std::io::stdout().write_all(&bufs[i][..j]);
                 break;
             }
             i += 1;
         }
+        println! ("|")
+    }
+    r
+}
+
+fn tcp_write(inner : &net::TcpStream, buf: &[u8]) -> io::Result<usize> {
+    let r = (&*inner).write(buf);
+    #[cfg(debug_assertions)]
+    if let Ok(n) = r {
+        print! (")");
+        std::io::stdout().write_all(&buf[..n]);
+        println! ("|")
+    } 
+    r
+}
+
+fn tcp_write_vectored(inner : &net::TcpStream, bufs: &[IoSlice<'_>]) -> io::Result<usize> {
+    let r = (&*inner).write_vectored(bufs);
+    #[cfg(debug_assertions)]
+    if let Ok(n) = r {
+        let mut i = 0;
+        let mut j = n;
+        print! ("]");
+        while i < bufs.len() {
+            if j > bufs[i].len() {
+                std::io::stdout().write_all(&bufs[i][..]);
+                j -= bufs[i].len();
+            } else {
+                std::io::stdout().write_all(&bufs[i][..j]);
+                break;
+            }
+            i += 1;
+        }
+        println! ("|");
     }
     r
 }
@@ -227,37 +264,6 @@ impl<'a> Read for &'a TcpStream {
             tcp_read_vectored(inner, bufs)
         })
     }
-}
-
-fn tcp_write(inner : &net::TcpStream, buf: &[u8]) -> io::Result<usize> {
-    let r = (&*inner).write(buf);
-    #[cfg(debug_assertions)]
-    if let Ok(n) = r {
-        println! ("){}|", std::str::from_utf8(&buf[..n]).unwrap())
-    } 
-    r
-}
-
-fn tcp_write_vectored(inner : &net::TcpStream, bufs: &[IoSlice<'_>]) -> io::Result<usize> {
-    let r = (&*inner).write_vectored(bufs);
-    #[cfg(debug_assertions)]
-    if let Ok(n) = r {
-        let mut i = 0;
-        let mut j = n;
-        print! ("]");
-        while i < bufs.len() {
-            if j > bufs[i].len() {
-                print! ("{}", std::str::from_utf8(&bufs[i][..]).unwrap());
-                j -= bufs[i].len();
-            } else {
-                print! ("{}", std::str::from_utf8(&bufs[i][..j]).unwrap());
-                break;
-            }
-            i += 1;
-        }
-        println! ("|");
-    }
-    r
 }
 
 impl Write for TcpStream {

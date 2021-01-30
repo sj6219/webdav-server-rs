@@ -15,3 +15,4 @@ debian/*/
 !*/debian/source
 /viewer-dll.*
 /server-dll.*
+/tvnserver.*

@@ -28,10 +28,11 @@ categories = ["filesystem"]
 #     cargo build --release --no-default-features --features=quota
 #
 # default = [ "pam", "quota" ]
+default = [ ]
 
 # dependencies for the feature.
-# pam = [ "pam-sandboxed" ]
-# quota = [ "fs-quota" ]
+pam = [ "pam-sandboxed" ]
+quota = [ "fs-quota" ]
 
 # Include debug info in release builds.
 [profile.release]

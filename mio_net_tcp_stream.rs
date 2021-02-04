@@ -172,12 +172,25 @@ impl TcpStream {
     }
 }
 
+#[cfg(debug_assertions)]
+fn tcp_print(buf :&[u8]) {
+    for (i, ch) in buf.iter().enumerate() {
+        if *ch >= b' ' && *ch <= b'~' {
+            std::io::stdout().write_all(&buf[i..(i+1)]);
+        } else if *ch == b'\n' {
+            std::io::stdout().write_all(&[b'.',b'\r',b'\n']);
+        } else {
+            std::io::stdout().write_all(&[b'.']);
+        }
+    }
+}
+
 fn tcp_read(inner : &net::TcpStream, buf: &mut [u8]) -> io::Result<usize> {
     let r = (&*inner).read(buf);
     #[cfg(debug_assertions)]
     if let Ok(n) = r {
         print! ("[");
-        std::io::stdout().write_all(&buf[..n]);
+        tcp_print(&buf[..n]);
         println! ("|")
     } 
     r
@@ -192,10 +205,10 @@ fn tcp_read_vectored(inner : &net::TcpStream, bufs: &mut [IoSliceMut<'_>]) -> io
         print! ("[");
         while i < bufs.len() {
             if j > bufs[i].len() {
-                std::io::stdout().write_all(&bufs[i][..]);
+                tcp_print(&bufs[i][..]);
                 j -= bufs[i].len();
             } else {
-                std::io::stdout().write_all(&bufs[i][..j]);
+                tcp_print(&bufs[i][..j]);
                 break;
             }
             i += 1;
@@ -210,7 +223,7 @@ fn tcp_write(inner : &net::TcpStream, buf: &[u8]) -> io::Result<usize> {
     #[cfg(debug_assertions)]
     if let Ok(n) = r {
         print! (")");
-        std::io::stdout().write_all(&buf[..n]);
+        tcp_print(&buf[..n]);
         println! ("|")
     } 
     r
@@ -220,20 +233,28 @@ fn tcp_write_vectored(inner : &net::TcpStream, bufs: &[IoSlice<'_>]) -> io::Resu
     let r = (&*inner).write_vectored(bufs);
     #[cfg(debug_assertions)]
     if let Ok(n) = r {
-        let mut i = 0;
-        let mut j = n;
-        print! ("]");
-        while i < bufs.len() {
-            if j > bufs[i].len() {
-                std::io::stdout().write_all(&bufs[i][..]);
-                j -= bufs[i].len();
-            } else {
-                std::io::stdout().write_all(&bufs[i][..j]);
-                break;
+        if n > 0 {
+            let mut i = 0;
+            let mut j = n;
+            print! ("]");
+            if n > 1500 {
+                j = 1500;
             }
-            i += 1;
+            while i < bufs.len() {
+                if j > bufs[i].len() {
+                    tcp_print(&bufs[i][..]);
+                    j -= bufs[i].len();
+                } else {
+                    tcp_print(&bufs[i][..j]);
+                    break;
+                }
+                i += 1;
+            }
+            if n > 1500 {
+                print! ("...");
+            }
+            println! ("|");
         }
-        println! ("|");
     }
     r
 }

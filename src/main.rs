@@ -31,7 +31,7 @@ use std::net::{SocketAddr, ToSocketAddrs};
 use std::process::exit;
 use std::sync::Arc;
 
-use clap::clap_app;
+//use clap::clap_app;
 use headers::{authorization::Basic, Authorization, HeaderMapExt};
 use http::status::StatusCode;
 use hyper::{
@@ -82,7 +82,7 @@ impl Server {
     ) -> Result<Option<Arc<unixuser::User>>, StatusCode>
     {
         // Get username - if any.
-        let user = match auth_user.map(|u| u.as_str()).or(user_param) {
+        let _user = match auth_user.map(|u| u.as_str()).or(user_param) {
             Some(u) => u,
             None => return Ok(None),
         };
@@ -493,6 +493,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // println!("Listening on http://{:?}", sockaddr);
             println!("Listening on http://{:?}", addr);
 
+            #[cfg(feature = "vnc")]
             if let std::net::SocketAddr::V4(addrv4) = addr {
                 let name = if std::env::args().nth(1) == Some("-v".to_string()) {
                     "viewer-dll.dll\0"

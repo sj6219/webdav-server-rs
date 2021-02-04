@@ -22,6 +22,7 @@ pub struct User {
     pub shell:  PathBuf,
 }
 
+#[cfg(not(target_os = "windows"))]
 unsafe fn cptr_to_osstr<'a>(c: *const libc::c_char) -> &'a OsStr {
     let bytes = CStr::from_ptr(c).to_bytes();
     #[cfg(not(target_os = "windows"))]
@@ -34,6 +35,7 @@ unsafe fn cptr_to_osstr<'a>(c: *const libc::c_char) -> &'a OsStr {
     }
 }
 
+#[cfg(not(target_os = "windows"))]
 unsafe fn cptr_to_path<'a>(c: *const libc::c_char) -> &'a Path {
     Path::new(cptr_to_osstr(c))
 }

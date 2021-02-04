@@ -1,4 +1,4 @@
-use std::io;
+//use std::io;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 static THREAD_SWITCH_UGID_USED: AtomicBool = AtomicBool::new(false);
@@ -249,14 +249,14 @@ impl Drop for UgidSwitchGuard {
 
 /// Switch process credentials. Keeps the saved-uid as root, so that
 /// we can switch to other ids later on.
-pub fn proc_switch_ugid(uid: u32, gid: u32, keep_privs: bool) {
+pub fn proc_switch_ugid(_uid: u32, _gid: u32, _keep_privs: bool) {
     if THREAD_SWITCH_UGID_USED.load(Ordering::Acquire) {
         panic!("proc_switch_ugid: called after thread_switch_ugid() has been used");
     }
 
-    fn last_os_error() -> io::Error {
-        io::Error::last_os_error()
-    }
+    // fn last_os_error() -> io::Error {
+    //     io::Error::last_os_error()
+    // }
 
     #[cfg(not(any(target_os = "windows", target_os = "macos")))]
     unsafe {

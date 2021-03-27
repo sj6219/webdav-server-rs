@@ -382,7 +382,17 @@ impl Server {
 
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // command line option processing.
+    
+    #[cfg(not(debug_assertions))]
+    {
+        let name = std::env::current_exe().unwrap();
+        let mut path = std::path::PathBuf::from(name);
+        path.pop();
+        
+        //println!("set_current_dir {:?}", path.to_str());
+        std::env::set_current_dir(path);
+    }
+
     #[cfg(any())]
     {
         let matches = clap_app!(webdav_server =>
@@ -495,10 +505,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             #[cfg(feature = "vnc")]
             if let std::net::SocketAddr::V4(addrv4) = addr {
-                let name = if std::env::args().nth(1) == Some("-v".to_string()) {
-                    "viewer-dll.dll\0"
-                } else {
+                let name = if std::env::args().nth(1) == Some("-s".to_string()) {
                     "server-dll.dll\0"
+                } else {
+                    "viewer-dll.dll\0"
                 };
                 if !webdav_handler::load_lib(name) {
                     panic!();

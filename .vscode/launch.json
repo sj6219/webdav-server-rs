@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/target/debug/webdav-server.exe",
+            "program": "${workspaceFolder}/target/debug/tvnviewer.exe",
             "args": ["-v", "-optionsfile=C:\\Users\\sjpark\\Documents\\flex.vnc"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -22,15 +22,15 @@
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=webdav-server",
-                    "--package=webdav-server"
+                    "--bin=tvnviewer",
+                    "--package=tvnviewer"
                 ],
                 "filter": {
-                    "name": "webdav-server",
+                    "name": "tvnviewer",
                     "kind": "bin"
                 }
             },
-            "args": ["-v", "-optionsfile=C:\\Users\\sjpark\\Documents\\flex.vnc"],
+            "args": ["-v", "-optionsfile=C:\\Users\\sjpark\\Desktop\\flex.vnc"],
             "cwd": "${workspaceFolder}"
         },
         {

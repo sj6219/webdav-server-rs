@@ -2225,6 +2225,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "tvnviewer"
+version = "0.3.0"
+dependencies = [
+ "clap",
+ "enum_from_str",
+ "enum_from_str_derive",
+ "env_logger",
+ "fs-quota",
+ "futures",
+ "handlebars",
+ "headers",
+ "http",
+ "hyper",
+ "lazy_static",
+ "libc",
+ "log",
+ "net2",
+ "pam-sandboxed",
+ "percent-encoding 2.1.0",
+ "pwhash",
+ "regex",
+ "serde",
+ "serde_json",
+ "time 0.1.44",
+ "tokio",
+ "toml",
+ "url",
+ "webdav-handler",
+]
+
+[[package]]
 name = "twoway"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2474,37 +2505,6 @@ dependencies = [
  "winapi",
  "xml-rs",
  "xmltree",
-]
-
-[[package]]
-name = "webdav-server"
-version = "0.3.0"
-dependencies = [
- "clap",
- "enum_from_str",
- "enum_from_str_derive",
- "env_logger",
- "fs-quota",
- "futures",
- "handlebars",
- "headers",
- "http",
- "hyper",
- "lazy_static",
- "libc",
- "log",
- "net2",
- "pam-sandboxed",
- "percent-encoding 2.1.0",
- "pwhash",
- "regex",
- "serde",
- "serde_json",
- "time 0.1.44",
- "tokio",
- "toml",
- "url",
- "webdav-handler",
 ]
 
 [[package]]
